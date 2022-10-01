@@ -104,7 +104,13 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 require('lspconfig')['clangd'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
-    capabilities = capabilities
+    capabilities = capabilities,
+    cmd = {
+        "clangd",
+        "--background-index",
+        "--suggest-missing-includes",
+        "--query-driver=/usr/bin/arm-none-eabi-gcc"
+    }
 }
 require('lspconfig')['pyright'].setup{
     on_attach = on_attach,
