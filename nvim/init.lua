@@ -1,1 +1,1 @@
-require("gvicentin")
+require "gvicentin"

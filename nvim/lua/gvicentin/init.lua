@@ -1,5 +1,5 @@
-require("gvicentin.set")
-require("gvicentin.packer")
-require("gvicentin.remap")
-require("gvicentin.utils")
-
+require "gvicentin.options"
+require "gvicentin.autocommands"
+require "gvicentin.keymaps"
+require "gvicentin.util"
+require "gvicentin.plugins"
