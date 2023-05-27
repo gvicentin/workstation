@@ -19,6 +19,7 @@ vim.g.maplocalleader = " "
 --   command_mode = "c",
 
 keymap("n", "<leader>tr", ":lua Trim()<CR>", opts)
+keymap("n", "<leader>gg", ":G<CR>", opts)
 -- Normal --
 -- Better window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)
