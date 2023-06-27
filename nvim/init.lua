@@ -41,6 +41,10 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -116,8 +120,6 @@ require('lazy').setup({
     lazy = false,
   },
 
-  -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -135,6 +137,26 @@ require('lazy').setup({
         vim.keymap.set('n', ']c', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
+    },
+  },
+
+  {
+    -- Autocompletion
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = {
+      sort_by = "case_sensitive",
+      view = {
+        width = 50,
+      },
+      renderer = {
+        group_empty = true,
+      },
+      filters = {
+        dotfiles = true,
+      },
     },
   },
 
@@ -225,6 +247,10 @@ vim.o.hlsearch = false
 
 vim.o.colorcolumn = "88"
 
+-- Split
+vim.o.splitbelow = true
+vim.o.splitright = true
+
 -- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
@@ -265,18 +291,19 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
-
--- Keymap for changins windows
-vim.keymap.set('n', '<C-h>', '<cmd>TmuxNavigateLeft<CR>', { silent = true , desc = "Left window" })
-vim.keymap.set('n', '<C-l>', '<cmd>TmuxNavigateRight<CR>', { silent = true, desc = "Right window" })
-vim.keymap.set('n', '<C-j>', '<cmd>TmuxNavigateDown<CR>', { silent = true, desc = "Down window" })
-vim.keymap.set('n', '<C-k>', '<cmd>TmuxNavigateUp<CR>', { silent = true, desc = "Up window" })
+vim.keymap.set({ 'n', 'v' }, '<Space>pv', '<cmd>NvimTreeToggle<CR>', { silent = true })
 
 -- Keymap for resizing windows
 vim.keymap.set('n', '<C-Up>', '<cmd>resize +2<CR>', { silent = true , desc = "Resize window up" })
 vim.keymap.set('n', '<C-Down>', '<cmd>resize -2<CR>', { silent = true, desc = "Resize window down" })
 vim.keymap.set('n', '<C-Left>', '<cmd>vertical resize -2<CR>', { silent = true, desc = "Resize window left" })
 vim.keymap.set('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { silent = true, desc = "Resize window right" })
+
+-- Keymap for changins windows
+vim.keymap.set('n', '<C-h>', '<cmd>TmuxNavigateLeft<CR>', { silent = true , desc = "Left window" })
+vim.keymap.set('n', '<C-l>', '<cmd>TmuxNavigateRight<CR>', { silent = true, desc = "Right window" })
+vim.keymap.set('n', '<C-j>', '<cmd>TmuxNavigateDown<CR>', { silent = true, desc = "Down window" })
+vim.keymap.set('n', '<C-k>', '<cmd>TmuxNavigateUp<CR>', { silent = true, desc = "Up window" })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -432,7 +459,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
