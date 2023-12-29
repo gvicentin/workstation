@@ -218,6 +218,9 @@ exec setxkbmap -layout 'us,br' -variant 'intl,'
 bindsym $mod+comma exec xkblayout-state set +1
 bindsym --release $mod+comma exec pkill -SIGRTMIN+11 i3blocks
 
+# custom menus
+bindsym $mod+shift+m exec monitor_menu
+
 # Remove title bar
 default_border pixel
 
@@ -226,6 +229,7 @@ bindsym $mod+shift+x exec i3lock
 
 # Change the background
 exec_always feh --bg-scale ~/github/D3Ext/aesthetic-wallpapers/images/pixel-city.png
+# exec_always feh --bg-scale ~/Pictures/wallpapers/sea-sheperd-wallpaper.jpg
 
 # interactive screenshot by pressing printscreen
 bindsym Print exec flameshot gui
