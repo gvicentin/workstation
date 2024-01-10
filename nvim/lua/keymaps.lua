@@ -1,11 +1,12 @@
 -- Keymaps for better default experience
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
--- Better window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h", {})
-vim.keymap.set("n", "<C-j>", "<C-w>j", {})
-vim.keymap.set("n", "<C-k>", "<C-w>k", {})
-vim.keymap.set("n", "<C-l>", "<C-w>l", {})
+-- [[ Better window navigation ]]
+-- Disable because vim-tmux-navigator will handle this
+-- vim.keymap.set("n", "<C-h>", "<C-w>h", {})
+-- vim.keymap.set("n", "<C-j>", "<C-w>j", {})
+-- vim.keymap.set("n", "<C-k>", "<C-w>k", {})
+-- vim.keymap.set("n", "<C-l>", "<C-w>l", {})
 
 -- Resize with arrows
 vim.keymap.set("n", "<C-Up>", ":resize -2<CR>", {})
