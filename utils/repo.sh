@@ -1,4 +1,4 @@
-function repo {
+repo() {
     REPOS="$HOME/github"
 
     # Directory to be used in the session

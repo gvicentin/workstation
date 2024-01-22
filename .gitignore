@@ -3,3 +3,5 @@ zsh/.oh-my-zsh/
 !zsh/.oh-my-zsh/completions
 
 nvim/plugin/
+
+utils/aws.sh
