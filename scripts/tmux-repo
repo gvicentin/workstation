@@ -11,12 +11,17 @@ REPOS=(
 DIR_PATH=$(find "${REPOS[@]}" -maxdepth 1 -type d | fzf)
 DIR_NAME=$(basename "$DIR_PATH")
 
+if [ -z "$DIR_PATH" ]; then
+    echo "Operation canceled"
+    exit 1
+fi
+
 # Check if session is already opened
 tmux has-session -t "$DIR_NAME" 2> /dev/null
 if [ $? -eq 0 ]; then
     [ -n "$TMUX" ] && tmux switch -t "$DIR_NAME" || 
         tmux attach-session -t "$DIR_NAME"
-    return 0
+    exit 0
 fi
 
 if [ -n "$TMUX" ]; then
