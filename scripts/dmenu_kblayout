@@ -1,0 +1,24 @@
+#!/bin/bash
+
+read -r -d '' LAYOUTS << EOF
+English (US)
+English (US, intl)
+Portuguese (BR, abnt2)
+EOF
+
+OPTION=$(echo "$LAYOUTS" | dmenu -l 5 -p "Layout: ")
+
+case "$OPTION" in
+    'English (US)')
+        setxkbmap -layout us
+        statusbar
+        ;;
+    'English (US, intl)')
+        setxkbmap -layout us -variant intl
+        statusbar
+        ;;
+    'Portuguese (BR, abnt2)')
+        setxkbmap -layout br -variant abnt2
+        statusbar
+        ;;
+esac

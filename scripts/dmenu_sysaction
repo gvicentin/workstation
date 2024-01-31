@@ -1,0 +1,18 @@
+#!/bin/bash
+
+OPTION=$(echo -e " Refresh\n Lock\n Reboot\n Poweroff" | 
+	 dmenu -i -p "Action: ")
+
+case "$OPTION" in
+	' Refresh')
+		;;
+	' Lock') 
+		slock &
+		xset dpms force off ;;
+	' Reboot')
+		sudo shutdown --reboot now
+		;;
+	' Poweroff')
+		sudo shutdown --poweroff now
+		;;
+esac

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+read -r -d '' DEVICES << EOF
+Built-in Audio
+GK106 HDMI Audio Controller
+EOF
+
+OPTION=$(echo "$DEVICES" | dmenu -l 5 -p "Audio: ")
+
+case "$OPTION" in
+    'Built-in Audio')
+        wpctl set-default 47
+        wpctl set-default 48
+        statusbar
+        ;;
+    'GK106 HDMI Audio Controller')
+        wpctl set-default 50
+        statusbar
+        ;;
+esac

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# ------------------------------------------------------------------------------
+# HELPERS
+# ------------------------------------------------------------------------------
+get_kbmap() {
+    local XKB_QUERY=$(setxkbmap -query)
+    local XKB_LAYOUT=$(echo "$XKB_QUERY" | grep 'layout' | cut -d ':' -f 2 | 
+        tr -d ' ' | tr '[:lower:]' '[:upper:]')
+    local XKB_VARIANT=$(echo "$XKB_QUERY" | grep 'variant' | cut -d ':' -f 2 | 
+        tr -d ' ')
+
+    if [ -z "$XKB_VARIANT" ]; then
+        echo "  (${XKB_LAYOUT})" 
+    else
+        echo "  (${XKB_LAYOUT}, ${XKB_VARIANT})" 
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# ENTRYPOINT
+# ------------------------------------------------------------------------------
+KB=$(get_kbmap)
+VOL=$(volumectl GET)
+DATE=$(date +"  %a, %d %b %Y %H:%M")
+
+xsetroot -name " $KB | $VOL | $DATE"

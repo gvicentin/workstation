@@ -1,0 +1,27 @@
+#!/bin/bash
+
+REPOS=(
+    "$HOME/scripts"
+    "$HOME/suckless"
+    "$HOME/github/gvicentin"
+)
+
+# Session is not opened already
+# Finding path to directory
+DIR_PATH=$(find "${REPOS[@]}" -maxdepth 1 -type d | fzf)
+DIR_NAME=$(basename "$DIR_PATH")
+
+# Check if session is already opened
+tmux has-session -t "$DIR_NAME" 2> /dev/null
+if [ $? -eq 0 ]; then
+    [ -n "$TMUX" ] && tmux switch -t "$DIR_NAME" || 
+        tmux attach-session -t "$DIR_NAME"
+    return 0
+fi
+
+if [ -n "$TMUX" ]; then
+    tmux new-session -s "$DIR_NAME" -c "$DIR_PATH" -d
+    tmux switch -t "$DIR_NAME"
+else
+    tmux new-session -s "$DIR_NAME" -c "$DIR_PATH"
+fi

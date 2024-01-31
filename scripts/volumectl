@@ -1,0 +1,45 @@
+#!/bin/bash
+
+COMMAND=$1
+PARAM=${2-"5"}
+
+print_usage() {
+    echo "Usage: $0 [GET|INC|DEC|MUT] [PARAM]"
+    echo ""
+    echo "COMMANDS:" 
+    echo "GET	Get volume level." 
+    echo "INC	Increment volume. Change amount using PARAM (default: 5)"
+    echo "DEC	Decrease volume. Change amount using PARAM (default: 5)"
+    echo "MUT	Toggle mute."
+}
+
+if [ -z "$COMMAND" ]; then
+    print_usage
+    exit 1
+fi
+
+case "$COMMAND" in
+    get|GET) 
+        VOL=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d ' ' -f2)
+        MUT=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d ' ' -f3)
+        
+        if [ -n "$MUT" ]; then
+            echo "  "
+        else
+            VOL=$(echo "$VOL * 100" | bc -q)
+            echo "  ${VOL%.*}"
+        fi
+    ;;
+    inc|INC) 
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "${PARAM}%+"
+        statusbar
+        ;;
+    dec|DEC) 
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "${PARAM}%-"
+        statusbar
+    ;;
+    mut|MUT) 
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+        statusbar
+    ;;
+esac

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+GLYPH_LIST="${HOME}/.local/nf-glyph-list"
+LIST_SIZE=10
+
+dmenu -l "$LIST_SIZE" -p "Glyph: " < "$GLYPH_LIST" |
+	cut -d ' ' -f 1 |
+	tr -d '\n' |
+	xclip -selection clipboard

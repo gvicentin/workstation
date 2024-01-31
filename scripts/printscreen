@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SELECTION=${1:-""}
+SCREENSHOTS_DIR="${HOME}/screenshots"
+
+if [ "$SELECTION" = "-s" ]; then
+    SCREENSHOT=$(scrot -s "${SCREENSHOTS_DIR}/%Y-%m-%d_%T.png" -e 'echo $f')
+else
+    SCREENSHOT=$(scrot "${SCREENSHOTS_DIR}/%Y-%m-%d_%T.png" -e 'echo $f')
+fi
+
+notify-send "Screenshot saved" "Path: $SCREENSHOT"
