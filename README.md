@@ -8,16 +8,17 @@ Ansible repository for configuring my workstations. Currently, it only supports
 Install ansible on Ubuntu.
 
 ```sh
-sudo apt-get install software-properties-common
+sudo apt install software-properties-common
+# TODO: check following
 sudo apt-add-repository ppa:ansible/ansible
-sudo apt-get update
-sudo apt-get install ansible
+sudo apt update
+sudo apt install git ansible
 ```
 
 Run ansible for the first time.
 
 ```sh
-sudo ansible-pull -U https://github.com/gvicentin/workstation.git
+sudo ansible-pull -e user=<user> -U https://github.com/gvicentin/workstation.git
 ```
 
 ## Notes
