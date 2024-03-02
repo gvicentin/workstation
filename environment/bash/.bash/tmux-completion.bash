@@ -50,6 +50,7 @@ function _tmux_complete_socket_name() {
     options=""
     return 0
 }
+
 function _tmux_complete_socket_path() {
     local IFS=$'\n'
     local cur="${1}" && shift

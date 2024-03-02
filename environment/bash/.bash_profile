@@ -4,16 +4,16 @@
 # github.com/gvicentin/workstation
 # ------------------------------------------------------------------------------
 
+export EDITOR="nvim"
+export MONITORL="HDMI-0"
+export MONITORR="DP-0"
+export BASH_CUSTOM_DIR="$HOME/.bash"
+
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 [ -d "$HOME/scripts" ] && PATH="$PATH:$HOME/scripts"
 [ -d "$HOME/go/bin" ] && PATH="$PATH:$HOME/go/bin"
 
-export EDITOR="nvim"
-export LMONITOR="HDMI-0"
-export RMONITOR="DP-0"
-
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
 	exec startx
-    setup-monitor
 fi
