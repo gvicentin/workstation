@@ -1,5 +1,5 @@
 #
 # ~/.bash_logout
 #
-# github.com/gvicentin/environment
+# github.com/gvicentin/workstation
 # ------------------------------------------------------------------------------

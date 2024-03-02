@@ -1,7 +1,7 @@
 #
 # ~/.bashrc
 #
-# github.com/gvicentin/environment
+# github.com/gvicentin/workstation
 # ------------------------------------------------------------------------------
 
 # If not running interactively, don't do anything
