@@ -1,20 +1,25 @@
-# testing
 - hosts: localhost
-  become: true
 
   pre_tasks:
     - name: update repositories on Ubuntu
       when: ansible_distribution == 'Ubuntu'
+      become: yes
       apt: 
         update_cache: yes
+        upgrade: yes
       changed_when: False
 
     - name: update repositories on Arch
-      when: ansible_distribution == 'Arch'
-      pacman:
+      become: yes
+      when: ansible_distribution == 'Archlinux'
+      community.general.pacman:
         update_cache: yes
+        upgrade: yes
       changed_when: False
 
   tasks:
-    - include: tasks/01-packages.yml
-    - include: tasks/02-environment.yml
+    - include_tasks: tasks/01-packages-apt.yml
+      when: ansible_distribution == 'Ubuntu'
+    - include_tasks: tasks/01-packages-pacman.yml
+      when: ansible_distribution == 'Archlinux'
+    - include_tasks: tasks/02-asdf.yml

@@ -1,0 +1,10 @@
+- name: Install packages on Arch
+  community.general.pacman: name={{item}}
+  become: yes
+  with_items:
+    - htop
+    - tmux
+    - exa
+    - ripgrep
+    - fzf
+    - flameshot
