@@ -96,7 +96,7 @@ prompt() {
     LEC=$?
     GITP=$(__git_ps1 "(%s)")
     KCTX="$(kubectl config current-context)"
-    KNS="$(kubectl config get-contexts xaveco --no-headers | awk '{ print $5 }')"
+    KNS="$(kubectl config get-contexts "$KCTX" --no-headers | awk '{ print $5 }')"
 
     [ -f ~/.tsuru/target ] && 
         TSURUTG="$(grep $(cat ~/.tsuru/target) ~/.tsuru/targets | awk '{ print $1 }')" ||
