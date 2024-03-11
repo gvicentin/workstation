@@ -89,7 +89,7 @@ prompt_right() {
 
 prompt_left() {
     [ "$LEC" -ne 0 ] && ECPROMPT=" ${LEC} | " || ECPROMPT=""
-    echo -e "\033[0;31m${ECPROMPT}\033[0m\033[0;34m\w\033[0m ${GITPROMPT}\033[0m"
+    echo -e "\033[0;31m${ECPROMPT}\033[0m\033[0;34m\w\033[0m ${GITP}\033[0m"
 }
 
 prompt() {
