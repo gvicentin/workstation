@@ -68,7 +68,11 @@ __git_complete gco _git_checkout
 # UTILITIES
 # ------------------------------------------------------------------------------
 take() {
-    [ -d "$1" ] && cd "$1" || mkdir -p "$1"; cd "$1"
+    if [ -d "$1" ]; then
+        cd "$1"
+    else
+        mkdir -p "$1"; cd "$1"
+    fi
 }
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -88,7 +92,7 @@ prompt_right() {
 }
 
 prompt_left() {
-    [ "$LEC" -ne 0 ] && ECPROMPT=" ${LEC} | " || ECPROMPT=""
+    [ "$LEC" -ne 0 ] && ECPROMPT="${LEC} 󰘌 " || ECPROMPT=""
     echo -e "\033[0;31m${ECPROMPT}\033[0m\033[0;34m\w\033[0m ${GITP}\033[0m"
 }
 
@@ -98,12 +102,12 @@ prompt() {
     KCTX="$(kubectl config current-context)"
     KNS="$(kubectl config get-contexts "$KCTX" --no-headers | awk '{ print $5 }')"
 
-    [ -f ~/.tsuru/target ] && 
+    [ -f ~/.tsuru/target ] &&
         TSURUTG="$(grep $(cat ~/.tsuru/target) ~/.tsuru/targets | awk '{ print $1 }')" ||
         TSURUTG=""
 
-    PS1=$(printf "\n%*s\r%s\n\033[0;35m❯\033[0m " "$(($(tput cols)+22))" "$(prompt_right)" "$(prompt_left)")
+    PS1="$(printf "\n%*s\r%s" "$(($(tput cols)+22))" "$(prompt_right)" "$(prompt_left)")\n\[\e[35m\]❯\[\e[0m\] "
 }
 
-PROMPT_COMMAND=prompt
 PROMPT_DIRTRIM=2
+PROMPT_COMMAND=prompt
