@@ -4,4 +4,4 @@ set colored-completion-prefix on
 set show-all-if-ambiguous on
 set completion-ignore-case on
 
-"\C-t":"tmux-repo\n"
+"\C-w":"tmux-repo\n"
