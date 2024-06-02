@@ -1,11 +1,15 @@
 - name: Clone asdf repository
+  become: yes
+  become_user: "{{ user }}"
   git:
     repo: https://github.com/asdf-vm/asdf.git
-    dest: "~{{user}}/.asdf"
+    dest: "/home/{{ user }}/.asdf"
     version: "v0.14.0"
 
 - name: Add asdf plugins
-  command: "~{{user}}/.asdf/bin/asdf plugin-add terraform"
+  command: "/home/{{ user }}/.asdf/bin/asdf plugin-add {{ item }}"
+  become: yes
+  become_user: "{{ user }}"
   with_items:
     - neovim
     - golang
@@ -14,5 +18,15 @@
     - terraform
 
 - name: Install asdf plugin
-  command: "~{{user}}/.asdf/bin/asdf install terraform"
-  become_user: "~{{user}}"
+  command: "~{{ user }}/.asdf/bin/asdf install {{ item }}"
+  become: yes
+  become_user: "{{ user }}"
+  with_items:
+    - neovim 0.10.0
+
+- name: Set global versions
+  command: "~{{ user }}/.asdf/bin/asdf global {{ item }}"
+  become: yes
+  become_user: "{{ user }}"
+  with_items:
+    - neovim 0.10.0

@@ -1,9 +1,11 @@
 - name: Install packages on Ubuntu
   apt: name={{item}}
   with_items:
+    - curl
+    - git
     - htop
     - tmux
-    - exa
+    - eza
     - ripgrep
     - fzf
     - flameshot
