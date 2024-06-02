@@ -9,17 +9,8 @@
         upgrade: yes
       changed_when: False
 
-    - name: update repositories on Arch
-      become: yes
-      when: ansible_distribution == 'Archlinux'
-      community.general.pacman:
-        update_cache: yes
-        upgrade: yes
-      changed_when: False
-
   tasks:
     - include_tasks: tasks/01-packages-apt.yml
       when: ansible_distribution == 'Ubuntu'
-    - include_tasks: tasks/01-packages-pacman.yml
-      when: ansible_distribution == 'Archlinux'
     - include_tasks: tasks/02-asdf.yml
+    - include_tasks: tasks/03-environment.yml

@@ -3,9 +3,15 @@
   with_items:
     - curl
     - git
+    - vim
     - htop
     - tmux
     - eza
     - ripgrep
     - fzf
     - flameshot
+    - build-essential
+    - libx11-dev
+    - libxft-dev
+    - libxinerama-dev
+    - feh

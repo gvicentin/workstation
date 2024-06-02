@@ -23,6 +23,7 @@
   become_user: "{{ user }}"
   with_items:
     - neovim 0.10.0
+    - kubectl 1.28.10 
 
 - name: Set global versions
   command: "~{{ user }}/.asdf/bin/asdf global {{ item }}"
@@ -30,3 +31,4 @@
   become_user: "{{ user }}"
   with_items:
     - neovim 0.10.0
+    - kubectl 1.28.10 
