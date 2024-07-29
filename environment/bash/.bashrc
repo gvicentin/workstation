@@ -42,11 +42,16 @@ alias gp="git push"
 alias gl="git pull"
 alias gco="git checkout"
 alias gsb="git status -s"
+alias glo="git log --oneline --decorate --all --graph"
 
 alias k='kubectl'
 alias kg='kubectl get'
 alias kd='kubectl describe'
+alias ke='kubectl edit'
 alias kgall='kubectl get --all-namespaces'
+
+alias tlab="tsuru target set tsuru-lab"
+alias tprod="tsuru target set tsuru-prod"
 
 # ------------------------------------------------------------------------------
 # COMPLETIONS
@@ -75,6 +80,15 @@ take() {
     fi
 }
 
+kubeprod() {
+    export KUBECONFIG_PREV="$KUBECONFIG"
+    KUBECONFIG="$HOME/.kube/gke-prod-config"
+}
+
+kubereset() {
+    export KUBECONFIG="$KUBECONFIG_PREV"
+}
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # ------------------------------------------------------------------------------
@@ -88,7 +102,7 @@ GIT_PS1_SHOWCOLORHINTS=1
 source "$BASH_CUSTOM_DIR/git-prompt.sh"
 
 prompt_right() {
-    echo -e "(\033[0;32m${KCTX}:${KNS}\033[0m) [\033[0;33m${TSURUTG}\033[0m]"
+    echo -e "(\033[0;32m${KCTX} :: ${KNS}\033[0m) [\033[0;33m${TSURUTG}\033[0m]"
 }
 
 prompt_left() {
@@ -99,8 +113,15 @@ prompt_left() {
 prompt() {
     LEC=$?
     GITP=$(__git_ps1 "(%s)")
-    KCTX="$(kubectl config current-context)"
-    KNS="$(kubectl config get-contexts "$KCTX" --no-headers | awk '{ print $5 }')"
+    KCTX="$(kubectl config current-context 2> /dev/null)"
+    KNS=""
+
+    if [ -n "$KCTX" ]; then
+        KNS="$(kubectl config get-contexts "$KCTX" --no-headers | awk '{ print $5 }')"
+    else
+        KCTX="empty"
+        KNS="empty"
+    fi
 
     [ -f ~/.tsuru/target ] &&
         TSURUTG="$(grep $(cat ~/.tsuru/target) ~/.tsuru/targets | awk '{ print $1 }')" ||
@@ -111,3 +132,7 @@ prompt() {
 
 PROMPT_DIRTRIM=2
 PROMPT_COMMAND=prompt
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
