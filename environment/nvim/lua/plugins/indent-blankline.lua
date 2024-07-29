@@ -7,6 +7,6 @@ return {
         show_trailing_blankline_indent = false,
     },
     config = function()
-        require("ibl").setup()
+        -- require("ibl").setup()
     end
 }

@@ -1,10 +1,5 @@
 return {
-    {
-        "tpope/vim-fugitive",
-        config = function()
-            vim.keymap.set("n", "<leader>g", "<CMD>Git<CR>", {})
-        end
-    },
+    { "tpope/vim-fugitive" },
     {
         -- Adds git releated signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
