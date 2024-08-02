@@ -128,6 +128,11 @@ prompt() {
         TSURUTG=""
 
     PS1="$(printf "\n%*s\r%s" "$(($(tput cols)+22))" "$(prompt_right)" "$(prompt_left)")\n\[\e[35m\]❯\[\e[0m\] "
+
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> \
+            "$HOME/.logs/bash-history-$(date "+%Y-%m-%d").log";
+    fi
 }
 
 PROMPT_DIRTRIM=2
