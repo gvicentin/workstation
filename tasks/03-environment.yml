@@ -9,7 +9,7 @@
     - .bashrc
     - .inputrc
     - .bash_logout
-    - .bash_profile
+    - .profile
 
 - name: Copy bash helper directory
   copy:
@@ -17,4 +17,20 @@
     dest: "~{{ user }}"
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: "0755"
+    mode: "0744"
+
+- name: Copy neovim config
+  copy:
+    src: "environment/nvim"
+    dest: "~{{ user }}/.config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0744"
+
+- name: Copy tmux config
+  copy:
+    src: "environment/tmux"
+    dest: "~{{ user }}/.config/tmux.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
