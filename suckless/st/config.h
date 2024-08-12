@@ -96,32 +96,30 @@ unsigned int tabspaces = 8;
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
-
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+    "#0d0c0c",
+    "#c4746e",
+    "#8a9a7b",
+    "#c4b28a",
+    "#8ba4b0",
+    "#a292a3",
+    "#8ea4a2",
+    "#c8c093",
+    "#a6a69c",
+    "#e46876",
+    "#87a987",
+    "#e6c384",
+    "#7fb4ca",
+    "#938aa9",
+    "#7aa89f",
+    "#c5c9c5",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
 	"#cccccc",
 	"#555555",
-	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+	"#c5c9c5", /* default foreground colour */
+	"#181616", /* default background colour */
 };
 
 
@@ -203,8 +201,6 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ MODKEY,               XK_k,           kscrollup,      {.i = +1} },
 	{ MODKEY,               XK_j,           kscrolldown,    {.i = +1} },
-	{ MODKEY,               XK_l,           kscrollup,      {.i = -1} },
-	{ MODKEY,               XK_h,           kscrolldown,    {.i = -1} },
 };
 
 /*

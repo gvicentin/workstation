@@ -16,3 +16,4 @@
     - libxinerama-dev
     - feh
     - arandr
+    - xclip

@@ -19,8 +19,11 @@ Run ansible for the first time.
 
 ```sh
 sudo ansible-pull -e user=<user> -U https://github.com/gvicentin/workstation.git
+```
 
-# or
+If you have the repository cloned, you can also do the following:
+
+```sh
 sudo ansible-playbook -e user=gvicentin local.yml
 ```
 
