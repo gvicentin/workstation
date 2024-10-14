@@ -9,7 +9,6 @@ Install ansible on Ubuntu.
 
 ```sh
 sudo apt install software-properties-common
-# TODO: check following
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt update
 sudo apt install git ansible
