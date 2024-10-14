@@ -7,6 +7,12 @@ return {
             ensure_installed = { "lua", "vim", "vimdoc", "c", "erlang", "go" },
             highlight = { enable = true },
             indent = { enable = true},
+
+            vim.filetype.add({
+                extension = {
+                    templ = "templ",
+                },
+            })
         })
     end
 }
