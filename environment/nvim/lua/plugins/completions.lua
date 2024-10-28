@@ -7,6 +7,8 @@ return {
 		dependencies = {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
+			"PaterJason/cmp-conjure",
+			"hrsh7th/cmp-buffer",
 		},
 	},
 	{
@@ -51,6 +53,7 @@ return {
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
+					{ name = "conjure" },
 					{ name = "luasnip" },
 				}, {
 					{ name = "buffer" },
