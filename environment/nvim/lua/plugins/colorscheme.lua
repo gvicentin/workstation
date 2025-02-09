@@ -1,9 +1,10 @@
+-- lua/plugins/mini.lua
 return {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    name = "kanagawa",
+  {
+    "miikanissi/modus-themes.nvim",
     priority = 1000,
     config = function()
-        vim.cmd("colorscheme kanagawa-dragon")
+      vim.cmd.colorscheme "modus_vivendi"
     end
+  }
 }
