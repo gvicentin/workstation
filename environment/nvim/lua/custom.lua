@@ -32,6 +32,8 @@ vim.o.timeoutlen = 600
 
 vim.o.termguicolors = true
 
+vim.o.exrc = true
+
 -- Copy to clipboard
 vim.keymap.set("n", "<space>y", '"+y')
 vim.keymap.set("v", "<space>y", '"+y')
@@ -45,6 +47,9 @@ vim.keymap.set("v", "<space>x", ":lua<CR>")             -- execute visual select
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 
+-- Keymaps for better default experience
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
 -- Lsp mappings
 vim.keymap.set('n', 'gdd', vim.lsp.buf.definition)
 vim.keymap.set('n', 'grn', vim.lsp.buf.rename)
@@ -53,6 +58,22 @@ vim.keymap.set('n', 'grr', vim.lsp.buf.references)
 vim.keymap.set('n', 'gri', vim.lsp.buf.implementation)
 vim.keymap.set('n', 'gQ', vim.lsp.buf.document_symbol)
 vim.keymap.set('n', '<C-S>', vim.lsp.buf.signature_help)
+
+-- Custom utilities
+function Trim()
+  local save = vim.fn.winsaveview()
+  ---@diagnostic disable-next-line: deprecated
+  vim.api.nvim_exec("keeppatterns silent! %s/\\s\\+$//e", false)
+  vim.fn.winrestview(save)
+end
+
+vim.keymap.set("n", "<leader>tr", ":lua Trim()<CR>", {})
+
+-- Delete to blackhole register
+vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d", {})
+
+-- Replace currently selected text with default register without yanking it
+vim.keymap.set("v", "<leader>p", "\"_dP")
 
 -- Completions
 --  see `:help ins-completion`
@@ -78,5 +99,15 @@ vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
+  end,
+})
+
+-- Because fennel_ls doesn't support formatting yet
+-- Automatically format before saving.
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*.fnl',
+  callback = function()
+    vim.cmd('silent! !fnlfmt --fix %')
+    vim.cmd('edit!')
   end,
 })
