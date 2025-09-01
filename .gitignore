@@ -1,10 +1,8 @@
 nvim/plugin/
 tmux/plugins
 
-suckless/st/st
-suckless/st/*.o
-suckless/dmenu/dmenu
-suckless/dmenu/stest
-suckless/dmenu/*.o
-suckless/dwm/dwm
-suckless/dwm/*.o
+*.o
+st/st
+dmenu/dmenu
+dmenu/stest
+dwm/dwm
