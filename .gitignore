@@ -2,6 +2,8 @@ nvim/plugin/
 tmux/plugins
 
 *.o
+*.swp
+
 st/st
 dmenu/dmenu
 dmenu/stest

@@ -25,3 +25,5 @@ libXft-devel
 ssh-keygen -t ed25519 -C "email@example.com"
 eval "$(ssh-agent -s)"
 ssh-add id_ed25519
+
+wget
