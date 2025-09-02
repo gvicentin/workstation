@@ -27,3 +27,11 @@ eval "$(ssh-agent -s)"
 ssh-add id_ed25519
 
 wget
+neofetch
+
+# font
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IosevkaTerm.tar.xz
+tar -xf IosevkaTerm.tar.xz -C IosevkaTerm
+sudo install -d /usr/share/fonts/IosevkaTerm
+sudo install -m 644 /path/to/your/font/IosevkaTerm/* /usr/share/fonts/IosevkaTerm
+fc-cache

@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=16:antialias=true:autohint=true";
+static char *font = "IosevkaTerm Nerd Font Mono:pixelsize=17:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -94,7 +94,8 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
-static const char *colorname[] = {
+/* default theme */
+static const char *default_colorname[] = {
 	/* 8 normal colors */
 	"black",
 	"red3",
@@ -122,8 +123,69 @@ static const char *colorname[] = {
 	"#555555",
 	"gray90", /* default foreground colour */
 	"black", /* default background colour */
+}; 
+
+/* modus operandi theme */
+static const char *modus_operandi_colorname[] = {
+	/* 8 normal colors */
+	"#ffffff",  /* black */
+	"#a60000",  /* red */
+	"#006800",  /* green */
+	"#6f5500",  /* yellow */
+	"#0031a9",  /* blue */
+	"#721045",  /* magenta */
+	"#005e8b",  /* cyan */
+	"#000000",  /* white */
+
+	/* 8 bright colors */
+	"#808080",  /* bright black */
+	"#d00000",  /* bright red */
+	"#008900",  /* bright green */
+	"#808000",  /* bright yellow */
+	"#0000ff",  /* bright blue */
+	"#dd22dd",  /* bright magenta */
+	"#008899",  /* bright cyan */
+	"#595959",  /* bright white */
+
+	[255] = 0,
+
+	/* more colors can be added after 255 to use with DefaultXX */
+	"#884900",  /* indexed color 16 from your config */
+	"#7f0000",  /* indexed color 17 from your config */
+	"#000000",  /* default foreground colour (from primary.foreground) */
+	"#ffffff",  /* default background colour (from primary.background) */
 };
 
+/* modus vivendi theme */
+static const char *colorname[] = {
+	/* 8 normal colors */
+	"#000000",  /* black */
+	"#ff5f59",  /* red */
+	"#44bc44",  /* green */
+	"#d0bc00",  /* yellow */
+	"#2fafff",  /* blue */
+	"#feacd0",  /* magenta */
+	"#00d3d0",  /* cyan */
+	"#ffffff",  /* white */
+
+	/* 8 bright colors */
+	"#404040",  /* bright black */
+	"#ff5f5f",  /* bright red */
+	"#44df44",  /* bright green */
+	"#efef00",  /* bright yellow */
+	"#338fff",  /* bright blue */
+	"#ff66ff",  /* bright magenta */
+	"#00eff0",  /* bright cyan */
+	"#989898",  /* bright white */
+
+	[255] = 0,
+
+	/* more colors can be added after 255 to use with DefaultXX */
+	"#fec43f",  /* indexed color 16 from your config */
+	"#ff9580",  /* indexed color 17 from your config */
+	"#ffffff",  /* default foreground colour (from primary.foreground) */
+	"#000000",  /* default background colour (from primary.background) */
+};
 
 /*
  * Default colors (colorname index)
