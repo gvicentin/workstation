@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Config
+# ---------------------------------------------------------------------------
+WT_PATHS="$HOME/dev/nu"              # comma-separated dirs containing repos
+WT_WORKTREES_PATH="$HOME/dev/worktrees"
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+usage() {
+  cat <<EOF
+Usage: wt <command>
+
+Commands:
+  new    Create worktrees for one or more repos and open a tmux session
+  help   Show this message
+
+EOF
+}
+
+# Detect the default branch for a repo (origin/HEAD → main/master fallback)
+detect_default_branch() {
+  local repo_dir="$1"
+  local ref
+  ref=$(git -C "$repo_dir" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null || true)
+  if [[ -n "$ref" ]]; then
+    echo "${ref#refs/remotes/origin/}"
+    return
+  fi
+  for candidate in main master; do
+    if git -C "$repo_dir" rev-parse --verify "origin/$candidate" &>/dev/null; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "main"
+}
+
+# Collect immediate subdirectories that are git repos from WT_PATHS
+collect_repos() {
+  local IFS=','
+  for base_dir in $WT_PATHS; do
+    base_dir="${base_dir## }"  # trim leading space
+    base_dir="${base_dir%% }"  # trim trailing space
+    [[ -d "$base_dir" ]] || continue
+    for repo in "$base_dir"/*/; do
+      [[ -d "$repo/.git" ]] && echo "$repo"
+    done
+  done
+}
+
+# ---------------------------------------------------------------------------
+# wt new
+# ---------------------------------------------------------------------------
+cmd_new() {
+  # 1. Prompt for branch name
+  printf "Branch name: "
+  read -r branch
+  if [[ -z "$branch" ]]; then
+    echo "Error: branch name cannot be empty" >&2
+    exit 1
+  fi
+
+  # 2. Collect repos and let user pick with fzf
+  local repos
+  repos=$(collect_repos)
+  if [[ -z "$repos" ]]; then
+    echo "Error: no git repos found in WT_PATHS ($WT_PATHS)" >&2
+    exit 1
+  fi
+
+  local selected
+  selected=$(echo "$repos" | while read -r r; do basename "$r"; done \
+    | fzf --multi --prompt="Select repos> ") || true
+  if [[ -z "$selected" ]]; then
+    echo "Cancelled." >&2
+    exit 0
+  fi
+
+  # 3. Build group directory
+  local date_prefix
+  date_prefix=$(date +%Y%m%d)
+  local group_dir="$WT_WORKTREES_PATH/${date_prefix}-${branch}"
+  mkdir -p "$group_dir"
+
+  # 4. Create worktrees
+  while IFS= read -r repo_name; do
+    # Find the full path for this repo name
+    local repo_path
+    repo_path=$(echo "$repos" | grep "/${repo_name}/$" | head -1)
+    if [[ -z "$repo_path" ]]; then
+      echo "Warning: could not find repo path for $repo_name, skipping" >&2
+      continue
+    fi
+    repo_path="${repo_path%/}"  # trim trailing slash
+
+    local base_branch
+    base_branch=$(detect_default_branch "$repo_path")
+
+    echo "→ $repo_name: fetching origin/$base_branch..."
+    git -C "$repo_path" fetch origin "$base_branch"
+
+    local wt_dest="$group_dir/$repo_name"
+    echo "→ $repo_name: creating worktree at $wt_dest..."
+    git -C "$repo_path" worktree add -b "$branch" "$wt_dest" "origin/$base_branch"
+  done <<< "$selected"
+
+  # 5. Start / attach tmux session
+  local session_name="$branch"
+  if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux new-session -d -s "$session_name" -c "$group_dir"
+  fi
+
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "=$session_name"
+  else
+    tmux attach-session -t "=$session_name"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+case "${1:-help}" in
+  new)  cmd_new ;;
+  help|--help|-h) usage ;;
+  *)
+    echo "Unknown command: $1" >&2
+    usage >&2
+    exit 1
+    ;;
+esac
