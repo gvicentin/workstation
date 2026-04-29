@@ -16,6 +16,8 @@ Usage: wt <command>
 
 Commands:
   new    Create worktrees for one or more repos and open a tmux session
+  add    Add one or more repos to an existing worktree group
+  open   Pick an existing worktree group with fzf and open its tmux session
   help   Show this message
 
 EOF
@@ -122,10 +124,127 @@ cmd_new() {
 }
 
 # ---------------------------------------------------------------------------
+# wt add
+# ---------------------------------------------------------------------------
+cmd_add() {
+  if [[ ! -d "$WT_WORKTREES_PATH" ]]; then
+    echo "Error: $WT_WORKTREES_PATH does not exist" >&2
+    exit 1
+  fi
+
+  # 1. Pick the target group
+  local groups
+  groups=$(find "$WT_WORKTREES_PATH" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort)
+  if [[ -z "$groups" ]]; then
+    echo "Error: no worktree groups in $WT_WORKTREES_PATH" >&2
+    exit 1
+  fi
+
+  local selected_group
+  selected_group=$(echo "$groups" | fzf --prompt="Add to worktree> ") || true
+  if [[ -z "$selected_group" ]]; then
+    echo "Cancelled." >&2
+    exit 0
+  fi
+
+  local group_dir="$WT_WORKTREES_PATH/$selected_group"
+  local branch="${selected_group#[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-}"
+
+  # 2. Collect repos and filter out ones already present in the group
+  local repos
+  repos=$(collect_repos)
+  if [[ -z "$repos" ]]; then
+    echo "Error: no git repos found in WT_PATHS ($WT_PATHS)" >&2
+    exit 1
+  fi
+
+  local available
+  available=$(echo "$repos" | while read -r r; do
+    local name
+    name=$(basename "$r")
+    [[ -e "$group_dir/$name" ]] && continue
+    echo "$name"
+  done)
+
+  if [[ -z "$available" ]]; then
+    echo "All known repos are already in $selected_group; nothing to add."
+    exit 0
+  fi
+
+  local selected
+  selected=$(echo "$available" | fzf --multi --prompt="Add repos> ") || true
+  if [[ -z "$selected" ]]; then
+    echo "Cancelled." >&2
+    exit 0
+  fi
+
+  # 3. Create worktrees on the group's branch
+  while IFS= read -r repo_name; do
+    local repo_path
+    repo_path=$(echo "$repos" | grep "/${repo_name}/$" | head -1)
+    if [[ -z "$repo_path" ]]; then
+      echo "Warning: could not find repo path for $repo_name, skipping" >&2
+      continue
+    fi
+    repo_path="${repo_path%/}"
+
+    local base_branch
+    base_branch=$(detect_default_branch "$repo_path")
+
+    echo "→ $repo_name: fetching origin/$base_branch..."
+    git -C "$repo_path" fetch origin "$base_branch"
+
+    local wt_dest="$group_dir/$repo_name"
+    echo "→ $repo_name: creating worktree at $wt_dest..."
+    git -C "$repo_path" worktree add -b "$branch" "$wt_dest" "origin/$base_branch"
+  done <<< "$selected"
+}
+
+# ---------------------------------------------------------------------------
+# wt open
+# ---------------------------------------------------------------------------
+cmd_open() {
+  if [[ ! -d "$WT_WORKTREES_PATH" ]]; then
+    echo "Error: $WT_WORKTREES_PATH does not exist" >&2
+    exit 1
+  fi
+
+  local groups
+  groups=$(find "$WT_WORKTREES_PATH" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort)
+  if [[ -z "$groups" ]]; then
+    echo "Error: no worktree groups in $WT_WORKTREES_PATH" >&2
+    exit 1
+  fi
+
+  local selected
+  selected=$(echo "$groups" | fzf --prompt="Open worktree> ") || true
+  if [[ -z "$selected" ]]; then
+    echo "Cancelled." >&2
+    exit 0
+  fi
+
+  local group_dir="$WT_WORKTREES_PATH/$selected"
+  # Strip leading YYYYMMDD- date prefix to recover the branch/session name
+  local session_name="${selected#[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-}"
+
+  if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux new-session -d -s "$session_name" -c "$group_dir"
+  fi
+
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "=$session_name"
+  else
+    tmux attach-session -t "=$session_name"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 case "${1:-help}" in
   new)  cmd_new ;;
+  add)  cmd_add ;;
+  open) cmd_open ;;
   help|--help|-h) usage ;;
   *)
     echo "Unknown command: $1" >&2
