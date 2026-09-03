@@ -4,7 +4,13 @@ return {
     "miikanissi/modus-themes.nvim",
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme "modus_vivendi"
+      require("modus-themes").setup({
+        variants = {
+          modus_operandi = "tinted",
+          modus_vivendi = "default",
+        }
+      })
+      vim.cmd.colorscheme "modus_operandi"
     end
   }
 }

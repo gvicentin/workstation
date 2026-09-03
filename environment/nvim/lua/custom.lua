@@ -104,10 +104,12 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
 -- Because fennel_ls doesn't support formatting yet
 -- Automatically format before saving.
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.fnl',
-  callback = function()
-    vim.cmd('silent! !fnlfmt --fix %')
-    vim.cmd('edit!')
-  end,
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+--   pattern = '*.fnl',
+--   callback = function()
+--     vim.cmd('silent! !fnlfmt --fix %')
+--     vim.cmd('edit!')
+--   end,
+-- })
+
+vim.keymap.set("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>", {})

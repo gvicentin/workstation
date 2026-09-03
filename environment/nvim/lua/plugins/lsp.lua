@@ -14,11 +14,57 @@ return {
     },
     config = function()
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require("lspconfig")
-      lspconfig.lua_ls.setup({ capabilities = capabilities })
-      lspconfig.clojure_lsp.setup({ capabilities = capabilities })
-      lspconfig.clangd.setup({ capabilities = capabilities })
-      lspconfig.fennel_ls.setup({ capabilities = capabilities })
+      -- local lspconfig = require("lspconfig")
+      -- lspconfig.lua_ls.setup({ capabilities = capabilities })
+      -- lspconfig.clojure_lsp.setup({ capabilities = capabilities })
+      -- lspconfig.clangd.setup({ capabilities = capabilities })
+      -- lspconfig.fennel_ls.setup({ capabilities = capabilities })
+
+      vim.lsp.enable('lua_ls')
+      vim.lsp.config('lua_ls', {
+        capabilities = capabilities
+      })
+
+      vim.lsp.enable('clojure_lsp')
+      vim.lsp.config('clojure_lsp', {
+        capabilities = capabilities
+      })
+
+      vim.lsp.enable('pyright')
+      vim.lsp.config('pyright', {
+        capabilities = capabilities
+      })
+
+      vim.lsp.enable('fennel_ls')
+      vim.lsp.config('fennel_ls', {
+        capabilities = capabilities,
+      })
+
+      vim.lsp.enable('ocamllsp')
+      vim.lsp.config('ocamllsp', {
+        capabilities = capabilities,
+        cmd = { "ocamllsp" },
+        filetypes = {
+          'ocaml',
+          'ocaml.interface',
+          'ocaml.menhir',
+          'ocaml.ocamllex',
+          'dune',
+          'reason'
+        },
+        root_markers = {
+          { 'dune-project', 'dune-workspace' },
+          { "*.opam",       "esy.json",      "package.json" },
+          '.git'
+        },
+        settings = {},
+      })
+
+
+      vim.lsp.enable('pyright')
+      vim.lsp.config('pyright', {
+        capabilities = capabilities
+      })
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)

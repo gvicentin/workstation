@@ -38,6 +38,7 @@ return {
       vim.keymap.set("n", "<space>fg", telescope_builtin.live_grep)
       vim.keymap.set("n", "<space>gf", telescope_builtin.git_files)
       vim.keymap.set("n", "<space>fb", telescope_builtin.buffers)
+      vim.keymap.set("n", "<space>fe", telescope_builtin.diagnostics)
       vim.keymap.set("n", "<space>en", function()
         telescope_builtin.find_files {
           cwd = vim.fn.stdpath("config")
