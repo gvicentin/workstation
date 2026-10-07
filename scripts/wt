@@ -16,7 +16,7 @@ Usage: wt <command>
 
 Commands:
   new    Create worktrees for one or more repos and open a tmux session
-  add    Add one or more repos to an existing worktree group
+  add [group]  Add repos to a worktree group (defaults to the group of $PWD)
   open   Pick an existing worktree group with fzf and open its tmux session
   help   Show this message
 
@@ -123,10 +123,29 @@ cmd_new() {
   fi
 }
 
+# Return the worktree group containing the current directory, if any.
+current_worktree_group() {
+  local worktrees_dir current_dir relative_path group
+  [[ -d "$WT_WORKTREES_PATH" ]] || return 1
+
+  worktrees_dir=$(cd "$WT_WORKTREES_PATH" && pwd -P)
+  current_dir=$(pwd -P)
+  case "$current_dir/" in
+    "$worktrees_dir"/*/) ;;
+    *) return 1 ;;
+  esac
+
+  relative_path="${current_dir#"$worktrees_dir"/}"
+  group="${relative_path%%/*}"
+  [[ -d "$worktrees_dir/$group" ]] || return 1
+  printf '%s\n' "$group"
+}
+
 # ---------------------------------------------------------------------------
 # wt add
 # ---------------------------------------------------------------------------
 cmd_add() {
+  local requested_group="${1:-}"
   if [[ ! -d "$WT_WORKTREES_PATH" ]]; then
     echo "Error: $WT_WORKTREES_PATH does not exist" >&2
     exit 1
@@ -140,11 +159,24 @@ cmd_add() {
     exit 1
   fi
 
-  local selected_group
-  selected_group=$(echo "$groups" | fzf --prompt="Add to worktree> ") || true
+  local selected_group="$requested_group"
+  if [[ -n "$selected_group" ]]; then
+    if [[ ! -d "$WT_WORKTREES_PATH/$selected_group" ]]; then
+      echo "Error: worktree group '$selected_group' does not exist" >&2
+      exit 1
+    fi
+  else
+    selected_group=$(current_worktree_group || true)
+  fi
+
   if [[ -z "$selected_group" ]]; then
-    echo "Cancelled." >&2
-    exit 0
+    selected_group=$(echo "$groups" | fzf --prompt="Add to worktree> ") || true
+    if [[ -z "$selected_group" ]]; then
+      echo "Cancelled." >&2
+      exit 0
+    fi
+  else
+    echo "Adding to worktree: $selected_group"
   fi
 
   local group_dir="$WT_WORKTREES_PATH/$selected_group"
@@ -243,7 +275,7 @@ cmd_open() {
 # ---------------------------------------------------------------------------
 case "${1:-help}" in
   new)  cmd_new ;;
-  add)  cmd_add ;;
+  add)  cmd_add "${2:-}" ;;
   open) cmd_open ;;
   help|--help|-h) usage ;;
   *)
