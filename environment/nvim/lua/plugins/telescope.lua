@@ -19,7 +19,16 @@ return {
             theme = "ivy"
           },
           git_files = {
-            theme = "ivy"
+            theme = "ivy",
+            -- Include hidden files when using the Git files picker only.
+            git_command = {
+              "git",
+              "ls-files",
+              "--cached",
+              "--others",
+              "--exclude-standard",
+              "--",
+            },
           },
           buffers = {
             theme = "ivy"
@@ -38,7 +47,7 @@ return {
       vim.keymap.set("n", "<space>fg", telescope_builtin.live_grep)
       vim.keymap.set("n", "<space>gf", telescope_builtin.git_files)
       vim.keymap.set("n", "<space>fb", telescope_builtin.buffers)
-      vim.keymap.set("n", "<space>fe", telescope_builtin.diagnostics)
+      vim.keymap.set("n", "<space>ff", telescope_builtin.current_buffer_fuzzy_find)
       vim.keymap.set("n", "<space>en", function()
         telescope_builtin.find_files {
           cwd = vim.fn.stdpath("config")
